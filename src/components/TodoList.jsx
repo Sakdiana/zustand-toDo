@@ -2,9 +2,11 @@ import React from "react";
 import { useTodos } from "../store";
 
 const Todo = ({ id, title, completed }) => {
+  const toggleTodo=useTodos(state=>state.toggleTodo)
   return (
     <div className="flex items-center gap-4">
       <input
+      onChange={()=>toggleTodo(id)}
         type="checkbox"
         checked={completed}
         readOnly
