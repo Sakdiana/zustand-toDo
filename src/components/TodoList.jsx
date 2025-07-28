@@ -1,4 +1,5 @@
 import React from "react";
+import { useTodos } from "../store";
 
 const Todo = ({ id, title, completed }) => {
   return (
@@ -17,10 +18,8 @@ const Todo = ({ id, title, completed }) => {
 };
 
 const TodoList = () => {
-  const todos = [
-    { id: 1, title: "Learn JS", completed: true },
-    { id: 2, title: "Learn React", completed: false },
-  ];
+  const todos = useTodos(state=>state.todos)
+
 
   return (
     <div className="flex flex-col gap-4 min-h-[300px]">

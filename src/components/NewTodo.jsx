@@ -1,10 +1,17 @@
 import React, { useRef, useState } from "react";
+import { useTodos } from "../store";
 
 export default function NewTodo() {
   const [isOpen, setIsOpen] = useState(false);
   const inputRef = useRef();
 
+  const addTodo = useTodos((state) => state.addTodo);
+
   const handleAddTodo = () => {
+    const value = inputRef.current.value.trim();
+    if (!value) return; // игнор пустых
+    addTodo(value);
+    inputRef.current.value = "";
     setIsOpen(false);
   };
 
@@ -50,12 +57,19 @@ export default function NewTodo() {
             />
 
             {/* footer */}
-            <div className="flex justify-end">
+            <div className="flex justify-between">
               <button
                 onClick={() => setIsOpen(false)}
                 className="border px-4 py-2 rounded text-gray-600 hover:bg-gray-100"
               >
                 Close
+              </button>
+
+              <button
+                onClick={handleAddTodo}
+                className="bg-teal-500 text-white px-4 py-2 rounded hover:bg-teal-600 transition"
+              >
+                Добавить
               </button>
             </div>
           </div>
