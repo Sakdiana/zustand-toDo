@@ -1,47 +1,54 @@
 import { create } from "zustand";
+import { persist, devtools } from "zustand/middleware";
 
-export const useTodos = create((set, get) => ({
-  todos: [
-    { id: 1, title: "Learn JS", completed: true },
-    { id: 2, title: "Learn React", completed: false },
-  ],
-  loading: false,
-  error: null,
-  // addTodo:(title)=>set(state=>{
-  //     const newTodo={id:new Date(),title,completed:false}
+export const useTodos = create(
+  devtools(
+    persist(
+      (set, get) => ({
+        todos: [
+          { id: 1, title: "Learn JS", completed: true },
+          { id: 2, title: "Learn React", completed: false },
+        ],
+        loading: false,
+        error: null,
 
-  //     return{
-  //         todos:[...state.todos,newTodo]
-  //     }
-  // })
+        addTodo: (title) => {
+          const newTodo = { id: Date.now(), completed: false, title };
+          set({ todos: [...get().todos, newTodo] });
+        },
 
-  //   addTodo: (title) =>
-  //     set((state) => ({
-  //       todos: [
-  //         ...state.todos,
-  //         {
-  //           id: new Date(),
-  //           title,
-  //           completed: false,
-  //         },
-  //       ],
-  //     })),
+        toggleTodo: (todoId) =>
+          set({
+            todos: get().todos.map((todo) =>
+              todoId === todo.id ? { ...todo, completed: !todo.completed } : todo
+            ),
+          }),
 
-  addTodo: (title) => {
-    const newTodo = { id: Date.now(), completed: false, title };
-    set({ todos: [...get().todos, newTodo] });
-  },
+        fetchTodos: async () => {
+          set({ loading: true });
 
-  toggleTodo: (todoId) =>
-    set({
-      todos: get().todos.map((todo) =>
-        todoId === todo.id ? { ...todo, completed: !todo.completed } : todo
-      ),
-    }),
+          try {
+            const res = await fetch(
+              "https://jsonplaceholder.typicode.com/todos?_limit=10"
+            );
+
+            if (!res.ok) throw new Error("Failed to fetch todos");
+
+            const data = await res.json();
+            set({ todos: data, error: null });
+          } catch (error) {
+            set({ error: error.message });
+          } finally {
+            set({ loading: false });
+          }
+        },
+      }),
+      { name: "todos-storage" }
+    )
+  )
+);
+
+export const useFilter = create((set) => ({
+  filter: "all",
+  setFilter: (value) => set({ filter: value }),
 }));
-
-
-export const useFilter=create((set)=>({
-    filter:"all",
-    setFilter:(value)=>set({filter :value})
-}))

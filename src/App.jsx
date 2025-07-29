@@ -4,6 +4,7 @@ import Filter from './components/Filter';
 import TodoList from './components/TodoList';
 import TotalTodos from './components/TotalTodos';
 import NewTodo from './components/NewTodo';
+import FetchTodos from './components/FetchTodos';
 
 function App() {
   return (
@@ -13,6 +14,7 @@ function App() {
       <hr className="w-full border-gray-300" />
       <TotalTodos />
       <NewTodo />
+      <FetchTodos/>
     </div>
   );
 }
