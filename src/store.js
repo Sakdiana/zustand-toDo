@@ -1,7 +1,6 @@
-import { title } from "framer-motion/client";
 import { create } from "zustand";
 
-export const useTodos = create((set,get) => ({
+export const useTodos = create((set, get) => ({
   todos: [
     { id: 1, title: "Learn JS", completed: true },
     { id: 2, title: "Learn React", completed: false },
@@ -16,29 +15,33 @@ export const useTodos = create((set,get) => ({
   //     }
   // })
 
-//   addTodo: (title) =>
-//     set((state) => ({
-//       todos: [
-//         ...state.todos,
-//         {
-//           id: new Date(),
-//           title,
-//           completed: false,
-//         },
-//       ],
-//     })),
+  //   addTodo: (title) =>
+  //     set((state) => ({
+  //       todos: [
+  //         ...state.todos,
+  //         {
+  //           id: new Date(),
+  //           title,
+  //           completed: false,
+  //         },
+  //       ],
+  //     })),
 
+  addTodo: (title) => {
+    const newTodo = { id: Date.now(), completed: false, title };
+    set({ todos: [...get().todos, newTodo] });
+  },
 
-addTodo:(title)=>{
-    const newTodo={id:new Date(),completed:false,title}
-    set(
-        {todos:[...get().todos,newTodo]}
-    )
-},
-
-toggleTodo:(todoId)=>set ({
-    todos:get().todos.map(todo=>todoId===todo.id?{...todo,completed:!todo.completed}:todo)
-
-})
-
+  toggleTodo: (todoId) =>
+    set({
+      todos: get().todos.map((todo) =>
+        todoId === todo.id ? { ...todo, completed: !todo.completed } : todo
+      ),
+    }),
 }));
+
+
+export const useFilter=create((set)=>({
+    filter:"all",
+    setFilter:(value)=>set({filter :value})
+}))

@@ -1,5 +1,5 @@
 import React from "react";
-import { useTodos } from "../store";
+import { useFilter, useTodos } from "../store";
 
 const Todo = ({ id, title, completed }) => {
   const toggleTodo=useTodos(state=>state.toggleTodo)
@@ -20,12 +20,20 @@ const Todo = ({ id, title, completed }) => {
 };
 
 const TodoList = () => {
-  const todos = useTodos(state=>state.todos)
+  const filter = useFilter((state) => state.filter);
+const todos = useTodos((state) => state.todos);
+
+const filteredTodos = todos.filter((todo) => {
+  if (filter === "completed") return todo.completed;
+  if (filter === "uncompleted") return !todo.completed;
+  return true;
+});
+
 
 
   return (
     <div className="flex flex-col gap-4 min-h-[300px]">
-      {todos.map((todo) => (
+      {filteredTodos.map((todo) => (
         <Todo key={todo.id} {...todo} />
       ))}
     </div>
